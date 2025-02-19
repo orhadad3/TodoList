@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
     private FirebaseAuth mAuth;
@@ -27,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         Button registerButton = findViewById(R.id.btnRegister);
 
         loginButton.setOnClickListener(v -> loginUser());
-        registerButton.setOnClickListener(v -> registerUser());
+        registerButton.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
     private void loginUser() {
@@ -39,33 +41,35 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                Toast.makeText(this, "Welcome " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
-            } else {
-                Toast.makeText(this, "Login failed! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+        try {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        try {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
 
-    private void registerUser() {
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Enter valid email and password!", Toast.LENGTH_SHORT).show();
-            return;
+                                if (user != null) {
+                                    String displayName = user.getDisplayName();
+                                    if (displayName == null || displayName.isEmpty()) {
+                                        displayName = user.getEmail();
+                                    }
+                                    Toast.makeText(this, "Welcome " + displayName, Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    finish();
+                                } else {
+                                    Toast.makeText(this, "User data is null", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(this, "Login failed! " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(this, "Unexpected error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "Invalid email or password format", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Login error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Registration failed! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 }

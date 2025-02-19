@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editTextTaskDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="Task Description"
+            android:inputType="text"
+            android:layout_marginBottom="12dp"/>
+
+        <EditText
+            android:id="@+id/editTextTaskDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="Date (YYYY-MM-DD)"
+            android:inputType="date"
+            android:layout_marginBottom="12dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerUrgency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <EditText
+            android:id="@+id/editTextPostponedTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="Postponed To (optional, YYYY-MM-DD)"
+            android:inputType="date"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnSaveTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Task"/>
+
+    </LinearLayout>
+</ScrollView>
