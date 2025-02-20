@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +35,6 @@ public class AddTaskActivity extends AppCompatActivity {
 
         dbHelper = new Sql(this);
 
-        // Initialize views
         editTextDescription = findViewById(R.id.editTextTaskDescription);
         textViewDate = findViewById(R.id.textViewDate);
         spinnerUrgency = findViewById(R.id.spinnerUrgency);
@@ -57,8 +54,21 @@ public class AddTaskActivity extends AppCompatActivity {
 
         textViewDate.setOnClickListener(v -> showDatePicker(textViewDate));
 
+        // Check if it's an edit operation
+        Intent intent = getIntent();
+        if (intent.hasExtra("task_id")) {
+            loadTaskForEditing(intent);
+        }
+
         // Save task button
         btnSaveTask.setOnClickListener(v -> saveTask());
+    }
+
+    private void loadTaskForEditing(Intent intent) {
+        editTextDescription.setText(intent.getStringExtra("task_description"));
+        textViewDate.setText(intent.getStringExtra("task_date"));
+        spinnerUrgency.setSelection(intent.getIntExtra("task_urgency", 0));
+        spinnerStatus.setSelection(intent.getIntExtra("task_status", 0));
     }
 
     private void showDatePicker(TextView textView) {
@@ -75,20 +85,14 @@ public class AddTaskActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-
     private void saveTask() {
         String description = editTextDescription.getText().toString().trim();
         String date = textViewDate.getText().toString().trim();
         int urgency = spinnerUrgency.getSelectedItemPosition();
         int status = spinnerStatus.getSelectedItemPosition();
 
-        if (TextUtils.isEmpty(description)) {
-            Toast.makeText(this, "Please enter a task description", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(date) || date.equals("Select Date")) {
-            Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(description) || TextUtils.isEmpty(date)) {
+            Toast.makeText(this, "Please complete all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -102,22 +106,30 @@ public class AddTaskActivity extends AppCompatActivity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-
-        values.put("date", date);
         values.put("description", description);
+        values.put("date", date);
         values.put("urgency", urgency);
         values.put("status", status);
         values.put("user_uid", userUid);
 
-        long result = db.insert("tasks", null, values);
-        db.close();
-
-        if (result != -1) {
-            Toast.makeText(this, "Task saved successfully", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(AddTaskActivity.this, MainActivity.class));
-            finish();
+        Intent intent = getIntent();
+        if (intent.hasExtra("task_id")) {
+            // Update existing task
+            int taskId = intent.getIntExtra("task_id", -1);
+            db.update("tasks", values, "id = ?", new String[]{String.valueOf(taskId)});
+            Toast.makeText(this, "Task updated", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show();
+            // Add new task
+            long result = db.insert("tasks", null, values);
+            if (result != -1) {
+                Toast.makeText(this, "Task added", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to add task", Toast.LENGTH_SHORT).show();
+            }
         }
+
+        db.close();
+        startActivity(new Intent(AddTaskActivity.this, MainActivity.class));
+        finish();
     }
 }

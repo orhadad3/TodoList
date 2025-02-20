@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
-
-    <LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="20dp"
-    android:gravity="center"
     android:background="@color/LightRed">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="84dp"
-            android:contentDescription="@string/logo"
-            android:src="@drawable/logo" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="84dp"
+        android:contentDescription="@string/logo"
+        android:src="@drawable/logo"
+        android:scaleType="centerInside"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="20dp" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="16dp">
 
             <EditText
                 android:id="@+id/editTextFullName"
@@ -36,6 +44,8 @@
                 android:inputType="textPersonName"
                 android:padding="12dp"
                 android:background="@android:drawable/editbox_background"
+                android:textColor="#000000"
+                android:textColorHint="#808080"
                 android:layout_marginBottom="10dp" />
 
             <EditText
@@ -47,6 +57,8 @@
                 android:inputType="textEmailAddress"
                 android:padding="12dp"
                 android:background="@android:drawable/editbox_background"
+                android:textColor="#000000"
+                android:textColorHint="#808080"
                 android:layout_marginBottom="10dp" />
 
             <EditText
@@ -58,6 +70,8 @@
                 android:inputType="textPassword"
                 android:padding="12dp"
                 android:background="@android:drawable/editbox_background"
+                android:textColor="#000000"
+                android:textColorHint="#808080"
                 android:layout_marginBottom="10dp" />
 
             <EditText
@@ -69,7 +83,9 @@
                 android:inputType="textPassword"
                 android:padding="12dp"
                 android:background="@android:drawable/editbox_background"
-                android:layout_marginBottom="10dp" />
+                android:textColor="#000000"
+                android:textColorHint="#808080"
+                android:layout_marginBottom="20dp" />
 
             <Button
                 android:id="@+id/btnRegister"
@@ -77,15 +93,16 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/buttons"
                 android:text="@string/register"
-                android:layout_marginBottom="10dp"/>
+                android:textColor="@color/white"
+                android:layout_marginBottom="10dp" />
 
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buttons"
-                android:text="@string/returnLogin" />
-
+                android:text="@string/returnLogin"
+                android:textColor="@color/white" />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

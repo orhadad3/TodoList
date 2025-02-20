@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/filter_by_day"
+        android:title="@string/by_day" />
+    <item android:id="@+id/filter_completed"
+        android:title="@string/complete_task" />
+    <item android:id="@+id/filter_not_completed"
+        android:title="@string/not_completed" />
+    <item android:id="@+id/filter_all"
+        android:title="@string/all_task" />
+</menu>

@@ -19,4 +19,11 @@
     <string name="select_postponed_date">Select Postponed Date</string>
     <string name="choose_date">Choose Date</string>
     <string name="save_new_task">Save New Task</string>
+    <string name="logout">Logout</string>
+    <string name="not_completed">Not Completed Tasks</string>
+    <string name="all_task">All Tasks</string>
+    <string name="complete_task">Completed Tasks</string>
+    <string name="by_day">Filter by Day</string>
+    <string name="filter">Filter Tasks</string>
+    <string name="not_found">No tasks found</string>
 </resources>
