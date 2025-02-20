@@ -1,14 +1,19 @@
 package com.example.todolistproject;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +21,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Calendar;
+
 public class AddTaskActivity extends AppCompatActivity {
 
-    private EditText editTextDescription, editTextDate, editTextPostponedTo;
+    private EditText editTextDescription;
+    private TextView textViewDate;
     private Spinner spinnerUrgency, spinnerStatus;
-    private Button btnSaveTask;
     private Sql dbHelper;
 
     @Override
@@ -30,15 +37,14 @@ public class AddTaskActivity extends AppCompatActivity {
 
         dbHelper = new Sql(this);
 
-        // קישור בין הרכיבים ב-XML לקוד
+        // Initialize views
         editTextDescription = findViewById(R.id.editTextTaskDescription);
-        editTextDate = findViewById(R.id.editTextTaskDate);
-        editTextPostponedTo = findViewById(R.id.editTextPostponedTo);
+        textViewDate = findViewById(R.id.textViewDate);
         spinnerUrgency = findViewById(R.id.spinnerUrgency);
         spinnerStatus = findViewById(R.id.spinnerStatus);
-        btnSaveTask = findViewById(R.id.btnSaveTask);
+        Button btnSaveTask = findViewById(R.id.btnSaveTask);
 
-        // הגדרת אפשרויות ל-Spinners
+        // Set up spinners
         ArrayAdapter<String> urgencyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 new String[]{"Normal", "Urgent", "Very Urgent"});
         urgencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -49,19 +55,40 @@ public class AddTaskActivity extends AppCompatActivity {
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStatus.setAdapter(statusAdapter);
 
-        // לחיצה על כפתור השמירה
+        textViewDate.setOnClickListener(v -> showDatePicker(textViewDate));
+
+        // Save task button
         btnSaveTask.setOnClickListener(v -> saveTask());
     }
 
+    private void showDatePicker(TextView textView) {
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            @SuppressLint("DefaultLocale")
+            String selectedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
+            textView.setText(selectedDate);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+
+        datePickerDialog.show();
+    }
+
+
     private void saveTask() {
         String description = editTextDescription.getText().toString().trim();
-        String date = editTextDate.getText().toString().trim();
-        String postponedTo = editTextPostponedTo.getText().toString().trim();
-        int urgency = spinnerUrgency.getSelectedItemPosition();  // 0 - Normal, 1 - Urgent, 2 - Very Urgent
-        int status = spinnerStatus.getSelectedItemPosition();    // 0 - Pending, 1 - Completed, 2 - Not Completed
+        String date = textViewDate.getText().toString().trim();
+        int urgency = spinnerUrgency.getSelectedItemPosition();
+        int status = spinnerStatus.getSelectedItemPosition();
 
-        if (TextUtils.isEmpty(description) || TextUtils.isEmpty(date)) {
-            Toast.makeText(this, "Please fill in the description and date", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(description)) {
+            Toast.makeText(this, "Please enter a task description", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(date) || date.equals("Select Date")) {
+            Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -80,7 +107,6 @@ public class AddTaskActivity extends AppCompatActivity {
         values.put("description", description);
         values.put("urgency", urgency);
         values.put("status", status);
-        values.put("post_to", postponedTo.isEmpty() ? null : postponedTo);
         values.put("user_uid", userUid);
 
         long result = db.insert("tasks", null, values);

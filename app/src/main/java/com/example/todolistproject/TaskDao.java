@@ -15,7 +15,6 @@ public class TaskDao {
         dbHelper = new Sql(context);
     }
 
-    // ✅ הוספת משימה חדשה
     public boolean addTask(Task task) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -33,7 +32,6 @@ public class TaskDao {
         return result != -1;
     }
 
-    // ✅ שליפת כל המשימות למשתמש מחובר
     public List<Task> getTasksForUser(String userUid) {
         List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -60,7 +58,6 @@ public class TaskDao {
         return taskList;
     }
 
-    // ✅ עדכון משימה קיימת
     public boolean updateTask(Task task) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -77,7 +74,6 @@ public class TaskDao {
         return rowsAffected > 0;
     }
 
-    // ✅ מחיקת משימה לפי ID
     public boolean deleteTask(int taskId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsDeleted = db.delete("tasks", "id = ?", new String[]{String.valueOf(taskId)});
@@ -86,7 +82,6 @@ public class TaskDao {
         return rowsDeleted > 0;
     }
 
-    // ✅ שליפת משימות לפי סטטוס (למשל: רק משימות שבוצעו)
     public List<Task> getTasksByStatus(String userUid, int status) {
         List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -115,7 +110,6 @@ public class TaskDao {
         return taskList;
     }
 
-    // ✅ שליפת משימות לפי תאריך
     public List<Task> getTasksByDate(String userUid, String date) {
         List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -144,7 +138,6 @@ public class TaskDao {
         return taskList;
     }
 
-    // ✅ שליפת כל המשימות מה-Database (ללא סינון לפי משתמש)
     public List<Task> getAllTasks() {
         List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

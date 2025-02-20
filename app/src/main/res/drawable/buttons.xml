@@ -2,22 +2,17 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <!-- צבע הרקע של הכפתור -->
     <solid android:color="@color/SandyBrown" />
 
-    <!-- גבול הכפתור -->
     <stroke
         android:width="2dp"
         android:color="@color/AliceBlue" />
 
-    <!-- פינות מעוגלות -->
     <corners android:radius="12dp" />
 
-    <!-- רווח פנימי -->
     <padding
         android:left="12dp"
         android:right="12dp"
         android:top="8dp"
         android:bottom="8dp" />
-
 </shape>

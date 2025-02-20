@@ -1,8 +1,10 @@
 package com.example.todolistproject;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private TaskAdapter taskAdapter;
     private ArrayList<Task> taskList;
     private FloatingActionButton btnAddTask;
+    private TaskDao taskDao;
+    private TextView textViewUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +37,28 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerViewTasks = findViewById(R.id.recyclerViewTasks);
         btnAddTask = findViewById(R.id.btnAddTask);
+        textViewUserName = findViewById(R.id.textViewUserName);
+        taskDao = new TaskDao(this);
 
         taskList = new ArrayList<>();
-
         recyclerViewTasks.setLayoutManager(new LinearLayoutManager(this));
-        taskAdapter = new TaskAdapter(taskList);
+
+        loadUserName();
+
+        taskAdapter = new TaskAdapter(taskList, new TaskAdapter.OnTaskActionListener() {
+            @Override
+            public void onEditTask(Task task) {
+                editTask(task);
+            }
+
+            @Override
+            public void onDeleteTask(Task task) {
+                taskDao.deleteTask(task.getId());
+                loadTasksFromDatabase();
+                Toast.makeText(MainActivity.this, "Task Deleted", Toast.LENGTH_SHORT).show();
+            }
+        }, this);
+
         recyclerViewTasks.setAdapter(taskAdapter);
 
         loadTasksFromDatabase();
@@ -44,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
             startActivity(intent);
         });
+
         FirebaseAnalytics.getInstance(this).logEvent("screen_view", null);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -53,10 +77,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void loadUserName() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String displayName = currentUser.getDisplayName();
+            if (displayName == null || displayName.isEmpty()) {
+                displayName = currentUser.getEmail();
+            }
+            textViewUserName.setText("Welcome, " + displayName);
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private void loadTasksFromDatabase() {
-        // כאן תשלוף את המשימות מה-Database ותעדכן את הרשימה
         taskList.clear();
-        TaskDao taskDao = new TaskDao(this); // יצירת מופע של ה-DAO
         taskList.addAll(taskDao.getAllTasks());
         taskAdapter.notifyDataSetChanged();
     }
@@ -65,5 +99,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadTasksFromDatabase();
+    }
+
+    private void editTask(Task task) {
+        Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+        intent.putExtra("task_id", task.getId());
+        startActivity(intent);
     }
 }
