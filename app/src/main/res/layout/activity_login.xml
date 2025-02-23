@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".LoginActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
@@ -19,15 +21,16 @@
         android:layout_marginBottom="20dp" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
-        android:backgroundTint="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,36 +42,36 @@
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:autofillHints=""
+                android:background="@android:drawable/editbox_background"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:padding="12dp"
-                android:background="@android:drawable/editbox_background"
                 android:textColor="#000000"
-                android:textColorHint="#808080"
-                android:layout_marginBottom="10dp" />
+                android:textColorHint="#757575" />
 
             <EditText
                 android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:autofillHints=""
+                android:background="@android:drawable/editbox_background"
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="12dp"
-                android:background="@android:drawable/editbox_background"
                 android:textColor="#000000"
-                android:textColorHint="#808080"
-                android:layout_marginBottom="20dp" />
+                android:textColorHint="#757575" />
 
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/buttons"
                 android:text="@string/login"
-                android:textColor="@color/white"
-                android:layout_marginBottom="10dp" />
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/btnRegister"
@@ -79,4 +82,18 @@
                 android:textColor="@color/white" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.608" />
 </androidx.constraintlayout.widget.ConstraintLayout>
