@@ -287,7 +287,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                         return;
                     }
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                    Log.e("TaskAdapter", "Error parsing date: " + e.getMessage(), e);
+                    Toast.makeText(view.getContext(), "Error processing date", Toast.LENGTH_SHORT).show();
+                    return;  // Handle the error gracefully instead of crashing
                 }
 
                 // Set post_to in DB

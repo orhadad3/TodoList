@@ -49,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
         Button registerButton = findViewById(R.id.btnRegister);
 
         // Set click listener for registration button
-        registerButton.setOnClickListener(v -> registerFunc());
+        registerButton.setOnClickListener(v -> registerUser());
     }
 
     /**
@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
      * Validates input, creates a new user in Firebase Authentication,
      * and saves user data in Firebase Realtime Database.
      */
-    private void registerFunc() {
+    private void registerUser() {
         String fullName = fullNameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();

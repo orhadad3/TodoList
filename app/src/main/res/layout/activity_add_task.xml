@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     tools:context=".AddTaskActivity"
-    android:background="@color/LightRed"
+    android:background="@color/AliceBlue"
     android:padding="16dp">
 
     <androidx.cardview.widget.CardView
